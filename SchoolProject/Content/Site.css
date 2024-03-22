@@ -1,0 +1,42 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+#navBar {
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    background: brown !important;
+    position: relative;
+    width: 100%;
+    height: 90px;
+    color: white;
+    font-weight: bold;
+}
+
+    #navBar .flexiGrow {
+        display: flex;
+        flex-direction: row;
+        list-style-type: none;
+        align-items: center;
+        flex-grow: 1;
+        gap: 20px;
+        padding: 0;
+        margin: 0;
+    }
+
+    #navBar .container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
