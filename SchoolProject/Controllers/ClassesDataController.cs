@@ -64,7 +64,7 @@ namespace SchoolProject.Controllers
             // Close the connection
             Conn.Close();
 
-            // Return the article titles
+            // Return the classes names
             return Classes;
         }
 

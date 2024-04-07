@@ -24,11 +24,11 @@ namespace SchoolProject.Controllers
 
         public ActionResult Show(int id)
         {
-            // Use the teacher data controller find teacher method
+            // Use the student data controller find student method
             StudentDataController Controller = new StudentDataController();
             Student SelectedStudent = Controller.FindStudent(id);
 
-            // Navigate to Views/Article/Show.cshtml
+            // Navigate to Views/Student/Show.cshtml
             return View(SelectedStudent);
         }
     }

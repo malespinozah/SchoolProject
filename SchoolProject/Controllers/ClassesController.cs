@@ -25,7 +25,7 @@ namespace SchoolProject.Controllers
             ClassesDataController Controller = new ClassesDataController();
             Classes SelectedClasses = Controller.FindClasses(id);
 
-            // Navigate to Views/Article/Show.cshtml
+            // Navigate to Views/Classes/Show.cshtml
             return View(SelectedClasses);
         }
     }

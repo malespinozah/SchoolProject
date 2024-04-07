@@ -58,7 +58,7 @@ namespace SchoolProject.Controllers
                 string TeacherFname = ResultSet["teacherfname"].ToString();
                 string TeacherLname = ResultSet["teacherlname"].ToString();
                 string EmployeeNumber = ResultSet["employeenumber"].ToString();
-                string Hiredate = Convert.ToDateTime(ResultSet["hiredate"]).ToString();
+                DateTime Hiredate = Convert.ToDateTime(ResultSet["hiredate"]);
                 decimal TeacherSalary = Convert.ToInt32(ResultSet["salary"]);
 
                 Teacher NewTeacher = new Teacher();
@@ -75,9 +75,20 @@ namespace SchoolProject.Controllers
             // Close the connection
             Conn.Close();
 
-            // Return the article titles
+            // Return the teachers names
             return Teachers;
         }
+
+        /// <summary>
+        /// Find an specific teacher from the list using the id
+        /// </summary>
+        /// <param name="TeacherId"></param>
+        /// <returns>
+        /// A teacher looked up from the search
+        /// </returns>
+        /// <example>
+        /// localhost: api/TeacherData/FindTeacher/6
+        /// </example>
 
         // Return the teacher with an ID matching an integer
         [HttpGet]
@@ -112,11 +123,91 @@ namespace SchoolProject.Controllers
                 NewTeacher.TeacherFname = ResultSet["teacherfname"].ToString();
                 NewTeacher.TeacherLname = ResultSet["teacherlname"].ToString();
                 NewTeacher.EmployeeNumber = ResultSet["employeenumber"].ToString();
-                NewTeacher.HireDate = Convert.ToDateTime(ResultSet["hiredate"]).ToString();
+                NewTeacher.HireDate = Convert.ToDateTime(ResultSet["hiredate"]);
                 NewTeacher.Salary = Convert.ToInt32(ResultSet["salary"]);
             }
 
             return NewTeacher;
+        }
+
+        // Add teacher
+
+        /// <summary>
+        /// Receives teacher information and enters it into the database
+        /// </summary>
+        /// <param name="NewTeacher">An object with fields that map to the columns of the teacher's table</param>
+        /// <returns></returns>
+        /// <example>
+        /// >curl -H "Content-Type: application/json" -d @teacher.json http://localhost:51326/api/teacherdata/addteacher
+        /// POST: api/TeacherData/AddTeacher
+        /// FORM DATA / REQUEST BODY / POST CONTENT
+        /// {
+        ///     "TeacherID": "23536",
+        ///     "TeacherFname": "Julia",
+        ///     "TeacherLname": "Park",
+        ///     "EmployeeNumber": "2677563",
+        ///     "HireDate": "Jun 35 2023",
+        ///     "Salary": "835.03",
+        /// }
+        /// </example>
+        [HttpPost]
+        [Route("api/TeacherData/AddTeacher")]
+        public void AddTeacher([FromBody]Teacher NewTeacher)
+        {
+            // Access database
+            MySqlConnection Conn = School.AccessDatabase();
+
+            // Openning a connection
+            Conn.Open();
+
+            //debugging
+            Debug.WriteLine("API for adding an teacher");
+            Debug.WriteLine(NewTeacher.TeacherId);
+
+            // SQL Command
+            MySqlCommand Cmd = Conn.CreateCommand();
+
+            // How to receive a teacher
+            string query = "insert into teachers (teacherid, teacherfname, teacherlname, employeenumber, hiredate, salary) values (@teacherid, @teacherfname, @teacherlname, @employeenumber, @hiredate, @salary)";
+
+            Cmd.CommandText = query;
+            Cmd.Parameters.AddWithValue("@teacherid", 0);
+            Cmd.Parameters.AddWithValue("@teacherfname", NewTeacher.TeacherFname);
+            Cmd.Parameters.AddWithValue("@teacherlname", NewTeacher.TeacherLname);
+            Cmd.Parameters.AddWithValue("@employeenumber", NewTeacher.EmployeeNumber);
+            Cmd.Parameters.AddWithValue("@hiredate", NewTeacher.HireDate);
+            Cmd.Parameters.AddWithValue("@salary", NewTeacher.Salary);
+            Cmd.ExecuteNonQuery(); // Executing the insert statement
+            Conn.Close();
+        }
+
+        // Delete Teacher 
+        /// <summary>
+        /// Deletes a teacher in the system
+        /// </summary>
+        /// <param name="teacherId">The Teacher Id</param>
+        /// <returns></returns>
+        /// <example>
+        /// POST: api/TeacherData/DeleteTeacher/5
+        /// </example>
+        [HttpPost]
+        [Route("api/TeacherData/DeleteTeacher/{TeacherId}")]
+        public void DeleteTeacher(int teacherId)
+        {
+            // Access database
+            MySqlConnection Conn = School.AccessDatabase();
+            // Openning a connection
+            Conn.Open();
+
+            // SQL Command
+            MySqlCommand Cmd = Conn.CreateCommand();
+            string query = "delete from teachers where teacherid = @teacherid";
+            Cmd.CommandText = query;
+
+            Cmd.Parameters.AddWithValue("@teacherid", teacherId);
+            Cmd.Prepare();
+            Cmd.ExecuteNonQuery(); // Executing the insert statement
+            Conn.Close();
         }
     }
 }
